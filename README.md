@@ -214,3 +214,45 @@ These instructions are written for use in a terminal (xterm, gterm, kterm, tty1,
 
         git push origin master
 
+
+Setup for Mac (tested under Mavericks) (WIP)
+---------------
+
+1. Get Homebrew: http://brew.sh (Installation instructions are at the bottom of the page.)
+
+2. Get OpenOCD through Homebrew. Type in terminal
+
+	brew install openocd
+	
+3. Get the Cross Compilers for the LM4F from https://launchpad.net/gcc-arm-embedded (download the one for Mac), extract, and move the extracted folder to the same directory that your Rasware2013 folder is in. 
+
+4. Get StellarisWare from http://toast.projectgeky.com/rasware/StellarisWare.tar.bz2, extract, and move the extracted StellarisWare folder to the same directory that your Rasware2013 folder is in. 
+
+5. Compile RASLib
+
+	cd Rasware2013/RASLib
+	make
+	
+6. Navigate to Rasware2013/RASTemplate and open up the Makefile with your favorite text editor. (*)
+
+7. Find the PREFIX variable around the top of the file and edit it to:
+
+	PREFIX = ../../gcc-arm-none-eabi-4_8-2014q3/bin/arm-none-eabi
+	
+8. A couple of lines below the PREFIX, where there are several other variables like CC, LD, etc., add a new variable GDB:
+
+	GDB := $(PREFIX)-gdb
+	
+9. Scroll down the Makefile to the #Rules section and add the following to 'flash:'
+
+	flash: $(TARGET)
+		 openocd -f /usr/local/Cellar/open-ocd/0.8.0/share/openocd/scripts/board/ek-lm4f120xl.cfg &
+		 sleep 2
+		 $(GDB) $(TARGET:.axf=.out) -ex "target remote :3333" -ex "monitor reset halt" -ex "load" -ex "monitor reset halt"
+		 
+10. Now, you should be able to edit the Main.c file in the RASTemplate and run 'make' in the terminal (from this directory) while having the board connected to your computer, and the code in the Main.c file should be written to the board. 
+
+(*) I think you can change the Makefile in Rasware2013/RASDemo in the same way as above, though in the case of RASDemo, I'm not sure which of the .c files will be written to your board. 
+
+I may have forgotten certain steps. Let us know if something in the above instructions is not working for you. 
+
