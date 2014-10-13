@@ -256,3 +256,5 @@ Setup for Mac (tested under Mavericks) (WIP)
 
 I may have forgotten certain steps. Let us know if something in the above instructions is not working for you. 
 
+NOTE: I do not know how to the get the indentations for this, but for the flash: section, the block starting with 'openocd' should line under right under $(TARGET) (1 tabspace I think), and 'sleep 2' should line up under 'openocd ...', and finally, the block starting with '$(GDB) ...' should line up under 'sleep 2'. Someone please fix this.  
+
